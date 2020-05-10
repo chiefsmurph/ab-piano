@@ -7,7 +7,7 @@ module.exports = async () => {
   mongoose.connect(mongoConnectionString, { useNewUrlParser: true });
 
   const browser = await puppeteer.launch({
-    headless: false
+    headless: true
   });
 
   return {

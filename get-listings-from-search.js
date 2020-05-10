@@ -1,7 +1,7 @@
 const getListingsFromSearchPage = page =>
   page.evaluate(() => 
     Array.from(
-      document.querySelectorAll('[itemprop="itemListElement"] a')
+      document.querySelectorAll('[itemprop="itemListElement"] a[data-check-info-section="true"]')
     ).map(node => node.href)
   );
 
@@ -12,7 +12,7 @@ const gotoNextPage = page =>
     nextSelector
   );
 
-const scan = async (browser, url, limit = 20) => {
+const scan = async (browser, url, limit = Number.POSITIVE_INFINITY) => {
 
   const page = await browser.newPage();
   await page.goto(url, { waitUntil: 'networkidle2' });

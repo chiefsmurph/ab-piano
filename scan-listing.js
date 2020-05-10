@@ -115,6 +115,7 @@ module.exports = async (browser, url) => {
     images
   });
 
+  console.log(`done scanning ${title}`);
   return createdListing;
 
 };
