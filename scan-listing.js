@@ -34,9 +34,10 @@ module.exports = async (browser, url) => {
   console.log(`scanning ${url}`);
 
   const airbnbId = getAirbnbIdFromUrl(url);
-  console.log({ airbnbId})
+  // console.log({ airbnbId})
   const foundListing = await Listing.findOne({ airbnbId }).lean({ virtuals: true });
   if (foundListing) {
+    console.log(`found ${airbnbId} in cache`);
     return foundListing;
   }
 
@@ -71,16 +72,18 @@ module.exports = async (browser, url) => {
     ];
     pics = uniqBy(pics, 'url');
     await nextPic();
-    console.log({pics})
   }
 
   await page.close();
 
+  console.log(`found ${pics.length} pics`);
 
   // now scan pics
 
   let scanned = [];
+  let index = 0;
   for (let { url, description} of pics) {
+    console.log(`scanning ${++index} of ${pics.length}`);
     scanned = [
       ...scanned,
       {
@@ -89,6 +92,7 @@ module.exports = async (browser, url) => {
         ...await scanPic(url)
       }
     ];
+    await new Promise(resolve => setTimeout(resolve, 2000));
   }
 
   const images = scanned.map(({ url, description, classifications }) => {

@@ -11,13 +11,13 @@ const schema = new Schema({
     description: String,
     objects: [String]
   }],
-  containsPiano: Boolean
+  hasPiano: Boolean
 }, {
   timestamps: true,
 });
 
 schema.pre('save', function(next) {
-  this.containsPiano = [
+  this.hasPiano = [
     this.description,
     ...this.images.map(({ description, objects }) => [
       description,

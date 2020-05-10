@@ -5,9 +5,11 @@ const getListingsFromSearchPage = page =>
     ).map(node => node.href)
   );
 
+const nextSelector = '[data-id="SearchResultsPagination"] li:last-of-type a';
 const gotoNextPage = page =>
-  page.evaluate(() => 
-    document.querySelector('[data-id="SearchResultsPagination"] li:last-of-type a').click()
+  page.evaluate(nextSelector => 
+    document.querySelector(nextSelector).click(),
+    nextSelector
   );
 
 const scan = async (browser, url, limit = 20) => {
@@ -16,16 +18,21 @@ const scan = async (browser, url, limit = 20) => {
   await page.goto(url, { waitUntil: 'networkidle2' });
 
   let allResults = [];
-  while (allResults.length < limit) {
+  let more = true;
+  do {
     allResults = [
       ...allResults,
       ...await getListingsFromSearchPage(page)
     ];
     console.log(JSON.stringify({ allResults, count: allResults.length }, null, 2));
-    await page.waitFor(3000);
-    await gotoNextPage(page);
-    await page.waitFor(3000);
-  }
+
+    more = await page.$(nextSelector) !== null;
+    if (more) {
+      await page.waitFor(3000);
+      await gotoNextPage(page);
+      await page.waitFor(3000);
+    }
+  } while (more && allResults.length < limit)
 
 
 

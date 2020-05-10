@@ -19,7 +19,7 @@ module.exports = async url => {
     url.split('/').pop().split('?')[0]
   ].join('/');
   await downloadFile(url, filename);
-  console.log(`done downloading ${url}`);
+  // console.log(`done downloading ${url}`);
 
   const classifications = await classify(filename);
 

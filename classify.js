@@ -25,7 +25,7 @@ const imageClassification = async path => {
   const mobilenetModel = await mobilenet.load();
   // Classify the image.
   const predictions = await mobilenetModel.classify(image);
-  console.log('Classification Results:', predictions);
+  // console.log('Classification Results:', predictions);
   return predictions;
 }
 
