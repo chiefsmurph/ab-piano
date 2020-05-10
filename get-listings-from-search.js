@@ -13,7 +13,7 @@ const gotoNextPage = page =>
 const scan = async (browser, url, limit = 20) => {
 
   const page = await browser.newPage();
-  await page.goto(url);
+  await page.goto(url, { waitUntil: 'networkidle2' });
 
   let allResults = [];
   while (allResults.length < limit) {
