@@ -1,0 +1,10 @@
+{
+  "name": "ab-piano",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "pawnjefferson <pawnjefferson@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "puppeteer": "^3.0.4"
+  }
+}
