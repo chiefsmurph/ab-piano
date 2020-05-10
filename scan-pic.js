@@ -23,7 +23,8 @@ module.exports = async url => {
 
   const classifications = await classify(filename);
 
-  fs.unlinkSync(filename);
+  const mentionsPiano = JSON.stringify(classifications).includes('piano');
+  !mentionsPiano && fs.unlinkSync(filename);
 
   return {
     url,

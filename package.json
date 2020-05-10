@@ -5,9 +5,12 @@
   "author": "pawnjefferson <pawnjefferson@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "puppeteer": "^3.0.4",
     "@tensorflow-models/mobilenet": "^2.0.4",
     "@tensorflow/tfjs": "^1.2.10",
-    "@tensorflow/tfjs-node": "^1.2.10"
+    "@tensorflow/tfjs-node": "^1.2.10",
+    "lodash": "^4.17.15",
+    "mongoose": "^5.9.13",
+    "mongoose-lean-virtuals": "^0.6.2",
+    "puppeteer": "^3.0.4"
   }
 }
