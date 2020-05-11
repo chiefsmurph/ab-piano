@@ -12,7 +12,8 @@ const schema = new Schema({
     seenScore: Number
   }],
   pianoInDescription: Boolean,
-  maxSeenScore: Number
+  maxSeenScore: Number,
+  overallSeenScore: Number,
 }, {
   timestamps: true,
 });
@@ -25,6 +26,7 @@ schema.pre('save', function(next) {
   this.maxSeenScore = Math.max(
     ...this.images.map(({ seenScore }) => seenScore)
   );
+  this.overallSeenScore = this.pianoInDescription ? 100 : this.maxSeenScore;
   next();
 });
 

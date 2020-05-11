@@ -4,6 +4,7 @@ const { uniqBy } = require('lodash');
 
 const { getAirbnbIdFromUrl } = require('./utils');
 const Listing = require('./models/Listing');
+const mapLimit = require('promise-map-limit');
 
 module.exports = async (browser, url) => {
 
@@ -26,6 +27,26 @@ module.exports = async (browser, url) => {
   const getDescription = () => page.evaluate(() => 
     Array.from(document.querySelectorAll('#details > div > div')).slice(0, 2).map(node => node.textContent).join('\n\n')
   );
+
+  const getAllPics = async () => {
+    await gotoPicSlideshow();
+    await page.waitFor(6000);
+  
+  
+    let pics = [];
+    let lastCount = undefined;
+    while (lastCount !== pics.length) {
+      lastCount = pics.length;
+      pics.push();
+      pics = [
+        ...pics,
+        await getPicData()
+      ];
+      pics = uniqBy(pics, 'url');
+      await nextPic();
+    }
+    return pics;
+  }
 
 
   
@@ -50,28 +71,20 @@ module.exports = async (browser, url) => {
 
 
   // get basic info
-  await expandReadmore();
-  await page.waitFor(1000);
+  try {
+    await expandReadmore();
+    await page.waitFor(1000);
+  } catch (e) {}
   const description = await getDescription();
   const title = await getTitle();
 
   
   // get pic info
-  await gotoPicSlideshow();
-  await page.waitFor(6000);
-
-
   let pics = [];
-  let lastCount = undefined;
-  while (lastCount !== pics.length) {
-    lastCount = pics.length;
-    pics.push();
-    pics = [
-      ...pics,
-      await getPicData()
-    ];
-    pics = uniqBy(pics, 'url');
-    await nextPic();
+  try {
+    pics = await getAllPics();
+  } catch (e) {
+    console.error(e);
   }
 
   await page.close();
@@ -80,20 +93,15 @@ module.exports = async (browser, url) => {
 
   // now scan pics
 
-  let scanned = [];
   let index = 0;
-  for (let { url, description } of pics) {
+  const scanned = await mapLimit(pics, 3, async ({ url, description }) => {
     console.log(`scanning ${++index} of ${pics.length}`);
-    scanned = [
-      ...scanned,
-      {
-        url,
-        description,
-        ...await scanPic(url)
-      }
-    ];
-    await new Promise(resolve => setTimeout(resolve, 2000));
-  }
+    return {
+      url,
+      description,
+      ...await scanPic(url)
+    };
+  });
 
   const images = scanned.map(({ url, description, classifications }) => {
     const seenScore = Math.round((classifications.find(({ className }) => className.includes('piano')) || {}).probability * 100) || 0;
@@ -113,6 +121,7 @@ module.exports = async (browser, url) => {
   });
 
   console.log(`done scanning ${title}`);
+  console.log(`overall seen score: ${createdListing.overallSeenScore}`)
   await new Promise(resolve => setTimeout(resolve, 5000));
 
   return createdListing;

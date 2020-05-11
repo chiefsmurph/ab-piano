@@ -20,8 +20,13 @@ module.exports = async url => {
   ].join('/');
   await downloadFile(url, filename);
   // console.log(`done downloading ${url}`);
-
-  const classifications = await classify(filename);
+  let classifications = [];
+  try {
+    classifications = await classify(filename);
+  } catch (e) {
+    console.error(e);
+  }
+  
   const mentionsPiano = JSON.stringify(classifications).includes('piano');
   !mentionsPiano && fs.unlinkSync(filename);
 
