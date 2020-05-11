@@ -9,21 +9,22 @@ const schema = new Schema({
   images: [{
     url: String,
     description: String,
-    objects: [String]
+    seenScore: Number
   }],
-  hasPiano: Boolean
+  pianoInDescription: Boolean,
+  maxSeenScore: Number
 }, {
   timestamps: true,
 });
 
 schema.pre('save', function(next) {
-  this.hasPiano = [
+  this.pianoInDescription = [
     this.description,
-    ...this.images.map(({ description, objects }) => [
-      description,
-      objects
-    ].join('')),
+    ...this.images.map(({ description }) => description),
   ].join('').includes('piano');
+  this.maxSeenScore = Math.max(
+    ...this.images.map(({ seenScore }) => seenScore)
+  );
   next();
 });
 

@@ -25,11 +25,10 @@ const run = async () => {
     analyzed.push(newScan);
     if (newScan.hasPiano) {
       console.log('\n');
-      console.log(`ALERT ALERT ${newScan.airbnb} has a piano!!`);
+      console.log(`ALERT ALERT ${newScan.title} (${newScan.airbnbId}) has a piano!!`);
       console.log(newScan.url);
       console.log('\n');
     }
-    await new Promise(resolve => setTimeout(resolve, 5000));
   }
 
   const total = analyzed.length;

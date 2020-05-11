@@ -22,7 +22,6 @@ module.exports = async url => {
   // console.log(`done downloading ${url}`);
 
   const classifications = await classify(filename);
-
   const mentionsPiano = JSON.stringify(classifications).includes('piano');
   !mentionsPiano && fs.unlinkSync(filename);
 

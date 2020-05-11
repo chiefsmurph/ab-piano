@@ -82,7 +82,7 @@ module.exports = async (browser, url) => {
 
   let scanned = [];
   let index = 0;
-  for (let { url, description} of pics) {
+  for (let { url, description } of pics) {
     console.log(`scanning ${++index} of ${pics.length}`);
     scanned = [
       ...scanned,
@@ -96,14 +96,11 @@ module.exports = async (browser, url) => {
   }
 
   const images = scanned.map(({ url, description, classifications }) => {
-    const objects = classifications.reduce((inner, { className }) => [
-      ...inner,
-      ...className.split(', ')
-    ], []);
+    const seenScore = Math.round((classifications.find(({ className }) => className.includes('piano')) || {}).probability * 100) || 0;
     return {
       url,
       description,
-      objects,
+      seenScore,
     };
   }, []);
 
@@ -116,6 +113,8 @@ module.exports = async (browser, url) => {
   });
 
   console.log(`done scanning ${title}`);
+  await new Promise(resolve => setTimeout(resolve, 5000));
+
   return createdListing;
 
 };
