@@ -9,7 +9,7 @@
     "@tensorflow/tfjs": "^1.2.10",
     "@tensorflow/tfjs-node": "^1.2.10",
     "async-await-retry": "^1.0.4",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "mongoose": "^5.9.13",
     "mongoose-lean-virtuals": "^0.6.2",
     "promise-map-limit": "^1.0.0",
