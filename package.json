@@ -10,7 +10,7 @@
     "@tensorflow/tfjs-node": "^1.2.10",
     "async-await-retry": "^1.0.4",
     "lodash": "^4.17.15",
-    "mongoose": "^5.9.13",
+    "mongoose": "^5.13.15",
     "mongoose-lean-virtuals": "^0.6.2",
     "promise-map-limit": "^1.0.0",
     "promise-retry": "^1.1.1",
